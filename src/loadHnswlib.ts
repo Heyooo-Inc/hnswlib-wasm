@@ -1,11 +1,10 @@
-import './hnswlib.mjs';
 import { type HnswModuleFactory } from '.';
 import { HnswlibModule } from './';
 
 let library: Awaited<ReturnType<HnswModuleFactory>>;
 type InputFsType = 'NODEFS' | 'IDBFS' | undefined;
 
-const initializeFileSystemAsync = async (inputFsType?: InputFsType): Promise<void> => {
+export const initializeFileSystemAsync = async (inputFsType?: InputFsType): Promise<void> => {
   const fsType = inputFsType == null ? 'IDBFS' : inputFsType;
   const EmscriptenFileSystemManager = library.EmscriptenFileSystemManager;
   return new Promise(function (resolve, reject) {
@@ -27,7 +26,7 @@ const initializeFileSystemAsync = async (inputFsType?: InputFsType): Promise<voi
 /**
  * Load the HNSW library in node or browser
  */
-export const loadHnswlib = async (inputFsType?: InputFsType): Promise<HnswlibModule> => {
+export const loadHnswlib = async (): Promise<HnswlibModule> => {
   try {
     // @ts-expect-error - hnswlib can be a global variable in the browser
     if (typeof hnswlib !== 'undefined' && hnswlib !== null) {
@@ -44,7 +43,7 @@ export const loadHnswlib = async (inputFsType?: InputFsType): Promise<HnswlibMod
 
       library = await factory();
       // console.log('Library initialized');
-      await initializeFileSystemAsync(inputFsType);
+      // await initializeFileSystemAsync(inputFsType);
       return library; // Add this line
     }
     return library;
@@ -54,4 +53,4 @@ export const loadHnswlib = async (inputFsType?: InputFsType): Promise<HnswlibMod
     throw err;
   }
 };
-loadHnswlib();
+// loadHnswlib();

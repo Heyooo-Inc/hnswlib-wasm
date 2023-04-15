@@ -70,7 +70,7 @@ describe('hnswlib.HierarchicalNSW', () => {
     });
 
     it('initIndex it is true if initialized with defaults', () => {
-      index.initIndex(5, ...defaultParams.initIndex);
+      index.initIndex(5);
       expect(index.isIndexInitialized()).toBe(true);
     });
 
@@ -211,8 +211,8 @@ describe('hnswlib.HierarchicalNSW', () => {
       index = new testHnswlibModule.HierarchicalNSW('l2', 3);
     });
 
-    it('throws error if called before the index is initialized', () => {
-      expect(() => index.getCurrentCount()).toThrow(testErrors.indexNotInitalized);
+    it('returns current number before the index is initialized', () => {
+      expect(index.getCurrentCount()).toBe(0);
     });
 
     it('returns current number of elements', () => {

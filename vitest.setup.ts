@@ -1,7 +1,8 @@
 // import { EsbuildPhoenix } from '@xn-sakina/phoenix'
 
 import 'fake-indexeddb/auto';
-import { HnswlibModule, loadHnswlib } from './dist/hnswlib';
+import { HnswlibModule } from './dist/hnswlib';
+import { loadHnswlib } from './lib/loadHnswlib';
 
 export async function teardown() {
   //process.stdout.write("");

@@ -546,6 +546,26 @@ namespace emscripten {
       index_ = new hnswlib::HierarchicalNSW<float>(space_, max_elements, m, ef_construction, random_seed, allow_replace_deleted);
     }
 
+    /**
+    * C++ function call default values are not exposed
+    * see https://github.com/emscripten-core/emscripten/issues/604
+    */
+    void initIndex2(uint32_t max_elements) {
+      HierarchicalNSW::initIndex(max_elements, 16, 200, 100, false);
+    }
+
+    void initIndex3(uint32_t max_elements, uint32_t m) {
+      HierarchicalNSW::initIndex(max_elements, m, 200, 100, false);
+    }
+
+    void initIndex4(uint32_t max_elements, uint32_t m, uint32_t ef_construction) {
+      HierarchicalNSW::initIndex(max_elements, m, ef_construction, 100, false);
+    }
+
+    void initIndex5(uint32_t max_elements, uint32_t m, uint32_t ef_construction, uint32_t random_seed) {
+      HierarchicalNSW::initIndex(max_elements, m, ef_construction, random_seed, false);
+    }
+
     void readIndex(const std::string& filename, bool allow_replace_deleted = false) {
       if (index_) delete index_;
 
@@ -626,6 +646,14 @@ namespace emscripten {
       catch (const std::exception& e) {
         throw std::runtime_error("Hnswlib Error: " + std::string(e.what()));
       }
+    }
+
+    /**
+    * C++ function call default values are not exposed
+    * see https://github.com/emscripten-core/emscripten/issues/604
+    */
+    void addPoint2(const std::vector<float>& vec, uint32_t idx) {
+      HierarchicalNSW::addPoint(vec, idx, false);
     }
 
     void addItems(const std::vector<std::vector<float>>& vec, const std::vector<uint32_t>& idVec, bool replace_deleted = false) {
@@ -808,10 +836,18 @@ namespace emscripten {
       return results;
     }
 
+    emscripten::val searchKnn2(const std::vector<float>& vec, uint32_t k) {
+      return HierarchicalNSW::searchKnn(vec, k, emscripten::val::undefined());
+    }
+
     uint32_t getCurrentCount() const {
-      if (index_ == nullptr) {
-        throw std::runtime_error("Search index has not been initialized, call `initIndex` in advance.");
-      }
+      /**
+       * Since langchain will call `getCurrentCount` before `initIndex`, no error will be thrown here. Instead, it will simply return 0.
+       * see https://github.com/hwchase17/langchainjs/blob/48e3aba3cad826e1e835d1ab42183d5155c94422/langchain/src/vectorstores/hnswlib.ts#L61
+      */
+      // if (index_ == nullptr) {
+      //   throw std::runtime_error("Search index has not been initialized, call `initIndex` in advance.");
+      // }
 
       return index_ == nullptr ? 0 : static_cast<uint32_t>(index_->cur_element_count);
     }
@@ -877,12 +913,17 @@ namespace emscripten {
     emscripten::class_<HierarchicalNSW>("HierarchicalNSW")
       .constructor<const std::string&, uint32_t>()
       .function("initIndex", &HierarchicalNSW::initIndex)
+      .function("initIndex", &HierarchicalNSW::initIndex2)
+      .function("initIndex", &HierarchicalNSW::initIndex3)
+      .function("initIndex", &HierarchicalNSW::initIndex4)
+      .function("initIndex", &HierarchicalNSW::initIndex5)
       .function("isIndexInitialized", &HierarchicalNSW::isIndexInitialized)
       .function("readIndex", &HierarchicalNSW::readIndex)
       .function("writeIndex", &HierarchicalNSW::writeIndex)
       .function("resizeIndex", &HierarchicalNSW::resizeIndex)
       .function("getPoint", &HierarchicalNSW::getPoint)
       .function("addPoint", &HierarchicalNSW::addPoint)
+      .function("addPoint", &HierarchicalNSW::addPoint2)
       .function("addItems", &HierarchicalNSW::addItems)
       //.function("addItemsWithPtr", static_cast<void(HierarchicalNSW::*)(float*, uint32_t, uint32_t*, uint32_t, bool)>(&HierarchicalNSW::addItemsWithPtr), emscripten::allow_raw_pointers())
       .function("addItemsWithPtr", &HierarchicalNSW::addItemsWithPtr)
@@ -896,6 +937,7 @@ namespace emscripten {
       .function("getEfSearch", &HierarchicalNSW::getEfSearch)
       .function("setEfSearch", &HierarchicalNSW::setEfSearch)
       .function("searchKnn", &HierarchicalNSW::searchKnn)
+      .function("searchKnn", &HierarchicalNSW::searchKnn2)
       ;
 
     function("syncFs", &hnswlib_syncfs);

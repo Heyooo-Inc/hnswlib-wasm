@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { HnswlibModule, InnerProductSpace, loadHnswlib } from '~lib/index';
+import { HnswlibModule, InnerProductSpace } from '~lib/index';
+import { loadHnswlib } from '~lib/loadHnswlib';
 import { testErrors } from '~test/testHelpers';
 
 describe('InnerProductSpace', () => {

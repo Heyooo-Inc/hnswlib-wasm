@@ -1,5 +1,7 @@
 import type * as module from './hnswlib-wasm';
 import type factory from './hnswlib-wasm';
+import { loadHnswlib } from './loadHnswlib';
+
 export type HierarchicalNSW = module.HierarchicalNSW;
 export type BruteforceSearch = module.BruteforceSearch;
 export type EmscriptenFileSystemManager = module.EmscriptenFileSystemManager;
@@ -11,8 +13,10 @@ export type syncFs = HnswlibModule['syncFs'];
 export type normalizePoint = HnswlibModule['normalizePoint'];
 export const IDBFS_STORE_NAME = 'FILE_DATA';
 
-export * from './loadHnswlib';
 export * from './constants';
+
+const lib = await loadHnswlib();
+export default lib;
 
 export interface HnswlibModule extends Omit<EmscriptenModule, '_malloc' | '_free'> {
   normalizePoint(vec: number[]): number[];

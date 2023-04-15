@@ -50,7 +50,7 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, 'lib/index.ts'),
-      name: 'hnswlib-wasm',
+      name: 'hnswlib',
       // the proper extensions will be added
       fileName: 'hnswlib',
       formats: ['es'],
@@ -60,6 +60,11 @@ export default defineConfig({
       exclude: [],
     },
     rollupOptions: {
+      output: {
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name].js',
+        assetFileNames: '[name].[ext]',
+      },
       // make sure to externalize deps that shouldn't be bundled
       // into your library
       external: [],
