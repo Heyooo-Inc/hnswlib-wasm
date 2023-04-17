@@ -9,7 +9,7 @@ let __tla = (async () => {
           return lib2;
       }
       if (!library) {
-        const temp = await import("./hnswlib.js");
+        const temp = await import("./hnswlib-wasm.js");
         const factory = temp.default;
         library = await factory();
         return library;

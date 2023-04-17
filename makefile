@@ -37,7 +37,7 @@ LIB_DIR := ./lib
 MY_COMMENT := /***************** GENERATED FILE ********************/ 
 
 # Define the name of the output JavaScript file within the 'lib' directory.
-OUTPUT = $(LIB_DIR)/hnswlib
+OUTPUT = $(LIB_DIR)/hnswlib-wasm
 
 # Define the list of source files that need to be compiled.
 SOURCES = ./$(SRC_DIR)/wrapper.cpp

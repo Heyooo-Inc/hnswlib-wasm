@@ -38,7 +38,7 @@ export const loadHnswlib = async (): Promise<HnswlibModule> => {
     if (!library) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const temp = await import('./hnswlib.mjs');
+      const temp = await import('./hnswlib-wasm.mjs');
       const factory = temp.default;
 
       library = await factory();
