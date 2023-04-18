@@ -583,7 +583,7 @@ namespace emscripten {
         }
         else {
           // Re-throw the original error if it's not the one you're looking for
-          throw;
+          throw std::runtime_error(e.what());
         }
       }
 
